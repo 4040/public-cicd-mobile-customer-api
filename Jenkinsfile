@@ -1,6 +1,6 @@
 pipeline {
   agent {
-    label 'bat-builder'
+    label 'Built-In Node'
   }
 
   options {
