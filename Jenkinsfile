@@ -36,7 +36,8 @@ pipeline {
 
     stage('Build') {
       steps {
-        withMaven {
+        withMaven(
+          mavenSettingsConfig: 'public-maven-config.xml') {
             sh 'mvn -B -U -e -V clean -DskipTests package'
           }
       }
@@ -44,7 +45,8 @@ pipeline {
 
     stage('Test') {
       steps {
-	      withMaven {
+	      withMaven(
+          mavenSettingsConfig: 'public-maven-config.xml') {
            sh "mvn -B -Dmule.env=dev test"
        }
      }
@@ -69,7 +71,8 @@ pipeline {
         APP_NAME = 'dev-${APPNAME}'
       }
       steps {
-        withMaven {
+        withMaven(
+          mavenSettingsConfig: 'public-maven-config.xml') {
             sh 'mvn -U -V -e -B -DskipTests deploy -DmuleDeploy -Dmule.version=$MULE_VERSION -Danypoint.username=$DEPLOY_CREDS_USR -Danypoint.password=$DEPLOY_CREDS_PSW -Dcloudhub.app=$APP_NAME -Dcloudhub.environment=$ENVIRONMENT -Dcloudhub.bg="$BG" -Dcloudhub.worker=$WORKER -Denv.name=dev'
           }
       }
@@ -101,7 +104,8 @@ pipeline {
           APP_NAME = '${APPNAME}'
         }
         steps {
-          withMaven{
+          withMaven(
+          mavenSettingsConfig: 'public-maven-config.xml') {
               sh 'mvn -U -V -e -B -DskipTests deploy -DmuleDeploy -Dmule.version=$MULE_VERSION -Danypoint.username=$DEPLOY_CREDS_USR -Danypoint.password=$DEPLOY_CREDS_PSW -Dcloudhub.app=$APP_NAME -Dcloudhub.environment=$ENVIRONMENT -Dcloudhub.bg="$BG" -Dcloudhub.worker=$WORKER -Denv.name=prod'
           }
         }
@@ -131,5 +135,3 @@ pipeline {
     maven 'M3'
   }
 }   
-
-
